@@ -1,92 +1,78 @@
-from flask import Flask, redirect, url_for, render_template, request, flash
 import logging
-import requests
-from apiclient.discovery import build
-from oauth2client.service_account import ServiceAccountCredentials
+from flask import render_template
+from flask import Flask
+from reqData.get_request import get_request
+from reqData.helloAnalytics import helloAnalytics
 
-# from flask_analytics import Analytics
 
 app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
-URL = " https://0j1mvc.deta.dev/"
-
-SCOPES = ['https://www.googleapis.com/auth/analytics.readonly']
-KEY_FILE_LOCATION = '<JSON_FILE>'
-VIEW_ID = '<APP VIEW ID>' 
-
-
-def initialize_analyticsreporting():
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            KEY_FILE_LOCATION, SCOPES
-    )
-    analytics = build('analyticsreporting', 'v4', credentials=credentials)
-
-    return analytics
-
-
-def get_report(analytics):
-    return analytics.reports().batchGet(
-            body={
-                'reportRequests': [
-                    {
-                        'viewId': VIEW_ID,
-                        'dateRanges': [{'startDate': '30daysAgo', 'endDate': 'today'}],
-                        'metrics': [{'expression': 'ga:pageviews'}],
-                        'dimensions': []
-                    }]
-            }
-    ).execute()
-
-
-def get_visitors(response):
-    visitors = 0
-    for report in response.get('reports', []):
-        columnHeader = report.get('columnHeader', {})
-        metricHeaders = columnHeader.get('metricHeader', {}).get('metricHeaderEntries', [])
-
-        for row in report.get('data', {}).get('rows', []):
-            dateRangeValues = row.get('metrics', [])
-
-            for i, values in enumerate(dateRangeValues):
-                for metricHeader, value in zip(metricHeaders, values.get('values')):
-                    visitors = value
-
-    return str(visitors)
-
-
-@app.route('/', methods=["GET", "POST"])
+@app.route('/', methods=["GET"])
 def hello_world():
-    return render_template("index.html")
+    prefix_google = """
+    <!-- Google tag (gtag.js) -->
+    <script async
+    src="https://www.googletagmanager.com/gtag/js?id=UA-251000346-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', ' UA-251000346-1');
+    </script>
+    """
+    return prefix_google + render_template('index.html')
 
-
-@app.route('/logger', methods=["GET", "POST"])
+@app.route('/log', methods=["GET"])
 def logger():
-    app.logger.debug('This is a debug message')
-    print("this a debug message in python")
-    value = request.form.get('log_input')
-    print(value)
-    app.logger.info('%s displayed successfully', value)
-    return render_template("logger.html", text=value)
+    
+    prefix_google = """
+    <!-- Google tag (gtag.js) -->
+    <script async
+    src="https://www.googletagmanager.com/gtag/js?id=UA-251000346-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', ' UA-251000346-1');
+    </script>
+    """
+    
+    return prefix_google + render_template('logger.html', value='This is warning')
 
 
-@app.route('/cookies', methods=["GET", "POST"])
-def get_cookies():
-    req = requests.get(
-            "https://analytics.google.com/analytics/web/#/p345081153/reports/intelligenthome"
-    )
+@app.route('/visitor', methods=["GET","POST"])
+def number_visitor():
+    with app.app_context():
+        prefix_google = """
+        <!-- Google tag (gtag.js) -->
+        <script async
+        src="https://www.googletagmanager.com/gtag/js?id=UA-251000346-1"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', ' UA-251000346-1');
+        </script>
+        """
+        res=get_request.get_data('https://www.google.com')
+        res2=get_request.get_data("https://analytics.google.com/analytics/web/#/report-home/a251000346w345081152p281219536")
 
-    return req.cookies.get_dict()
 
+        # Define the auth scopes to request.
+        scope = 'https://www.googleapis.com/auth/analytics.readonly'
+        key_file_location = 'key.json'
 
-@app.route('/visitors', methods=["GET", "POST"])
-def get_number_visitors():
-    req = requests.get(
-            "https://analytics.google.com/analytics/web/#/p345081153/reports/intelligenthome"
-    )
+        # Authenticate and construct service.
+        service = helloAnalytics.get_service(
+                api_name='analytics',
+                api_version='v3',
+                scopes=[scope],
+                key_file_location=key_file_location)
 
-    return req.text
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        #profile_id = helloAnalytics.get_first_profile_id(service)
+        helloAnalytics.print_results(helloAnalytics.get_results(service, '281219536')) #here is the id of the view
+        #data=helloAnalytics.get_results(service, profile_id) this can't be use for the id of profile
+        data=helloAnalytics.get_results(service, '281219536')
+        evt=data.get('rows')[0][0]
+        vist=data.get('rows')[0][1]
+        return prefix_google + render_template('cookie.html', value=res.cookie, analytic=res2.text, event= evt, visit= vist)
