@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"id":"6d9f6d97-a221-4311-ba67-48decedfddf4","space":41650,"runtime":"python3.9","name":"first_micro_Haution","path":"0j1mvc","project":"a0j7le6e","account":"144798365827","region":"eu-central-1","deps":["google-api-python-client","requests","flask","oauth2client","pytrends"],"envs":null,"public":true,"log_level":"debug","cron":""}
+=======
+{"id":"6d9f6d97-a221-4311-ba67-48decedfddf4","space":41650,"runtime":"python3.9","name":"first_micro_Haution","path":"0j1mvc","project":"a0j7le6e","account":"144798365827","region":"eu-central-1","deps":["google-api-python-client","requests","flask"],"envs":null,"public":true,"log_level":"debug","cron":""}
+>>>>>>> 0dbd267ccf7d73d6d69fb66b8dee423f7f152ed6

@@ -3,8 +3,12 @@ from flask import render_template
 from flask import Flask
 from reqData.get_request import get_request
 from reqData.helloAnalytics import helloAnalytics
+<<<<<<< HEAD
 from pytrends.request import TrendReq
 from datetime import date
+=======
+
+>>>>>>> 0dbd267ccf7d73d6d69fb66b8dee423f7f152ed6
 
 app = Flask(__name__)
 
@@ -76,6 +80,7 @@ def number_visitor():
         data=helloAnalytics.get_results(service, '281219536')
         evt=data.get('rows')[0][0]
         vist=data.get('rows')[0][1]
+<<<<<<< HEAD
         return prefix_google + render_template('cookie.html', value=res.cookie, analytic=res2.text, event= evt, visit= vist)
 
 @app.route('/trend', methods=["GET", "POST"])
@@ -108,3 +113,6 @@ def google_trend():
     print(trend_data.chine)
     print(trend_data["sintomas covid"])
     return prefix_google + render_template('trend.html',trend=trend_data)
+=======
+        return prefix_google + render_template('cookie.html', value=res.cookie, analytic=res2.text, event= evt, visit= vist)
+>>>>>>> 0dbd267ccf7d73d6d69fb66b8dee423f7f152ed6

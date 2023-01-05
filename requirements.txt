@@ -1,5 +1,9 @@
 google-api-python-client
 requests
+<<<<<<< HEAD
 flask
 oauth2client
 pytrends
+=======
+flask
+>>>>>>> 0dbd267ccf7d73d6d69fb66b8dee423f7f152ed6
