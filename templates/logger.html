@@ -1,0 +1,42 @@
+<!doctype html>
+<head>
+  <title>title</title>
+  <link rel="stylesheet" href=url_for('static', filename='custom.css')>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M7FTF2C');</script>
+  <!-- End Google Tag Manager -->
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M7FTF2C"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+<form action="#" method="post" target="_self">
+  <div>
+    <h1>Logs </h1>
+  </div>
+  <div class="row">
+      
+      <div class="logging_window">
+          <label >Test :</label><input type="text"  id="textLogger">
+          <!--  <pre id="output"></pre> -->
+      </div>
+    </div>
+  <input type="button"
+  onclick="send()"
+  value="submit">
+</form>
+<script>
+  function send() {
+    var x = document.getElementById("textLogger");
+    console.warn(x.value) ;
+  }
+</script>
+</body>
